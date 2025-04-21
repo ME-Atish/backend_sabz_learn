@@ -14,6 +14,12 @@ exports.register = async (req, res) => {
   }
 
   const { username, name, email, password, phone } = req.body;
+  
+    const isUserBan = await banUserModel.find({ phone });
+  
+    if (isUserBan.length) {
+      return res.status(409).json({ message: "This phone number is ban" });
+    }
 
   const isUserExist = await userModel.findOne({
     $or: [{ username }, { email }],
@@ -23,12 +29,6 @@ exports.register = async (req, res) => {
     return res.status(409).json({
       message: "username or email is duplicated",
     });
-  }
-
-  const isUserBan = await banUserModel.find({ phone });
-
-  if (isUserBan.length) {
-    return res.status(409).json({ message: "This phone number is ban" });
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
