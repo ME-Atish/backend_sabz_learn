@@ -1,10 +1,10 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const userModel = require("../../models/user");
+const banUserModel = require("../../models/banPhone");
 const registerResult = require("../../validators/register");
 
-exports.getMe = async () => {
-};
+exports.getMe = async () => {};
 
 exports.register = async (req, res) => {
   const validationResult = registerResult(req.body);
@@ -23,6 +23,12 @@ exports.register = async (req, res) => {
     return res.status(409).json({
       message: "username or email is duplicated",
     });
+  }
+
+  const isUserBan = await banUserModel.find({ phone });
+
+  if (isUserBan.length) {
+    return res.status(409).json({ message: "This phone number is ban" });
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
