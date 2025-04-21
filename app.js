@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const authRouter = require("./routes/v1/auth");
 
 app.use(cors());
-app.use(bodyParser.json);
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(
