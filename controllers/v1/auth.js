@@ -14,12 +14,12 @@ exports.register = async (req, res) => {
   }
 
   const { username, name, email, password, phone } = req.body;
-  
-    const isUserBan = await banUserModel.find({ phone });
-  
-    if (isUserBan.length) {
-      return res.status(409).json({ message: "This phone number is ban" });
-    }
+
+  const isUserBan = await banUserModel.find({ phone });
+
+  if (isUserBan.length) {
+    return res.status(409).json({ message: "This phone number is ban" });
+  }
 
   const isUserExist = await userModel.findOne({
     $or: [{ username }, { email }],
@@ -53,4 +53,26 @@ exports.register = async (req, res) => {
   });
 };
 
-exports.login = async () => {};
+exports.login = async (req, res) => {
+  const { identifier, password } = req.body;
+
+  const user = await userModel.findOne({
+    $or: [{ email: identifier }, { username: identifier }],
+  });
+
+  if (!user) {
+    return res.status(401).json({ message: "The username or email not found" });
+  }
+  const isPasswordValid = await bcrypt.compare(password, user.password);
+
+  if (!isPasswordValid) {
+    return res.status(401).json({ message: "Password is not valid" });
+  }
+
+  const accessToken = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    expiresIn: "30 day",
+    algorithm: "HS256",
+  });
+
+  return res.json({ accessToken });
+};
