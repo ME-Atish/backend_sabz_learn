@@ -1,26 +1,24 @@
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/user");
 
-module.exports = async (req, res , next) => {
+module.exports = async (req, res, next) => {
   try {
-    const authHeader = req.header("Authorization").split("");
+    const authHeader = req.header("Authorization")?.split(" ");
 
-    if (authHeader != 2) {
+    if (authHeader?.length != 2) {
       return res
-        .res(403)
+        .status(403)
         .json({ message: "This route protected and you can't access to it" });
     }
 
     const token = authHeader[1];
     const jwtPayload = jwt.verify(token, process.env.JWT_SECRET);
-
-    const user = await userModel.findById(jwtPayload.id).lean();
-    Reflect.deleteProperty(user, "password");
+    const user = await userModel.findById(jwtPayload.id);
 
     req.user = user;
 
-    next()
-  } catch (error) {
-    return res.json(error);
+    next();
+  } catch (err) {
+    return res.status(500).json(err.message);
   }
 };

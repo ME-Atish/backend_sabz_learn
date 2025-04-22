@@ -33,7 +33,7 @@ exports.register = async (req, res) => {
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = userModel.create({
+  const user = await userModel.create({
     username,
     email,
     name,
