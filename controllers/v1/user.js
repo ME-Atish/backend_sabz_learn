@@ -11,3 +11,9 @@ exports.banUser = async (req, res) => {
 
   return res.status(200).json({ message: "User ban successfully" });
 };
+
+exports.getAll = async (req, res) => {
+  const users = await userModel.find({});
+  
+  return res.json(users);
+};
