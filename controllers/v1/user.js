@@ -1,6 +1,8 @@
 const userModel = require("../../models/user");
 const banUserModel = require("../../models/banPhone");
+
 const { isValidObjectId } = require("mongoose");
+const bcrypt = require("bcrypt");
 
 exports.banUser = async (req, res) => {
   const mainUser = await userModel.findOne({ _id: req.params.id }).lean();
@@ -59,4 +61,31 @@ exports.changeRole = async (req, res) => {
   }
 
   return res.status(201).json({ message: "User's role changed successfully" });
+};
+
+exports.updateUser = async (req, res) => {
+  const { username, name, email, password, phone } = req.body;
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = await userModel
+    .findByIdAndUpdate(
+      { _id: req.user._id },
+      {
+        name,
+        username,
+        password: hashedPassword,
+        email,
+        phone,
+      }
+    )
+    .select("-password");
+
+  if (!user) {
+    return res
+      .status(500)
+      .json({ message: "Got error in update user information" });
+  }
+
+  return res.status(201).json(user);
 };

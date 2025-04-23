@@ -11,6 +11,7 @@ router.post("/ban/:id", authMiddleware, isAdminMiddleware, controller.banUser);
 
 router.delete("/:id", authMiddleware, isAdminMiddleware, controller.removeUser);
 
+router.put("/", authMiddleware, controller.updateUser);
 router.put("/role", authMiddleware, isAdminMiddleware, controller.changeRole);
 
 module.exports = router;
