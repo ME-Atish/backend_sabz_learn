@@ -34,3 +34,29 @@ exports.removeUser = async (req, res) => {
 
   return res.status(201).json({ message: "User delete successfully" });
 };
+
+exports.changeRole = async (req, res) => {
+  const id = req.body.id;
+  const isValidUserId = isValidObjectId(id);
+
+  if (!isValidUserId) {
+    return res.status(409).json({ message: "User Id is not valid" });
+  }
+
+  const user = await userModel.findOne({ _id: id });
+
+  let newRole = user.role === "ADMIN" ? "USER" : "ADMIN";
+
+  const updatedUser = await userModel.findByIdAndUpdate(
+    { _id: id },
+    {
+      role: newRole,
+    }
+  );
+
+  if (!updatedUser) {
+    return res.status(500).json({ message: "Got error in updated user" });
+  }
+
+  return res.status(201).json({ message: "User's role changed successfully" });
+};

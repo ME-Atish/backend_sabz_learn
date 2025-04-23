@@ -9,6 +9,8 @@ router.get("/", authMiddleware, isAdminMiddleware, controller.getAll);
 
 router.post("/ban/:id", authMiddleware, isAdminMiddleware, controller.banUser);
 
-router.delete("/:id" , authMiddleware , isAdminMiddleware , controller.removeUser) 
+router.delete("/:id", authMiddleware, isAdminMiddleware, controller.removeUser);
+
+router.put("/role", authMiddleware, isAdminMiddleware, controller.changeRole);
 
 module.exports = router;
