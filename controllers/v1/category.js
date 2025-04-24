@@ -1,13 +1,13 @@
 const { isValidObjectId } = require("mongoose");
 
 const categoryModel = require("../../models/category");
-const registerResult = require("../../validators/register");
+const categoryValidation = require("../../validators/category");
 
 exports.create = async (req, res) => {
-  const validationResult = registerResult(req.body);
+  const categoryResult = categoryValidation(req.body);
 
-  if (!validationResult) {
-    return res.status(422).json(validationResult);
+  if (!categoryResult) {
+    return res.status(422).json(categoryResult);
   }
 
   const { title, href } = req.body;
@@ -49,4 +49,36 @@ exports.remove = async (req, res) => {
   return res.status(201).json({ message: "category deleted successfully" });
 };
 
-exports.update = async (req, res) => {};
+exports.update = async (req, res) => {
+  const isValidId = isValidObjectId(req.params.id);
+
+  if (!isValidId) {
+    return res.status(422).json({ message: "Id is not valid" });
+  }
+
+  const categoryResult = categoryValidation(req.body);
+
+  console.log()
+
+  if (!categoryResult) {
+    return res.status(422).json(categoryResult);
+  }
+
+  const { title, href } = req.body;
+
+  const category = await categoryModel.findByIdAndUpdate(
+    {
+      _id: req.params.id,
+    },
+    {
+      title,
+      href,
+    }
+  );
+
+  if (!category) {
+    res.status(404).json({ message: "Category not found" });
+  }
+
+  return res.status(201).json({message :"Category updated successfully"});
+};
