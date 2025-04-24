@@ -1,3 +1,5 @@
+const { isValidObjectId } = require("mongoose");
+
 const categoryModel = require("../../models/category");
 const registerResult = require("../../validators/register");
 
@@ -29,6 +31,22 @@ exports.getAll = async (req, res) => {
   return res.json(categories);
 };
 
-exports.remove = async (req, res) => {};
+exports.remove = async (req, res) => {
+  const isValidUserId = isValidObjectId(req.params.id);
+
+  if (!isValidUserId) {
+    return res.status(409).json({ message: "User Id is not valid" });
+  }
+
+  const removeCategory = await categoryModel.findByIdAndDelete({
+    _id: req.params.id,
+  });
+
+  if (!removeCategory) {
+    return res.status(404).json({ message: "category not found" });
+  }
+
+  return res.status(201).json({ message: "category deleted successfully" });
+};
 
 exports.update = async (req, res) => {};
