@@ -19,7 +19,15 @@ exports.create = async (req, res) => {
   return res.status(201).json({ category });
 };
 
-exports.getAll = async (req, res) => {};
+exports.getAll = async (req, res) => {
+  const categories = await categoryModel.find({});
+
+  if (!categories) {
+    return res.status(500).json({ message: "Got error in server-side" });
+  }
+
+  return res.json(categories);
+};
 
 exports.remove = async (req, res) => {};
 
