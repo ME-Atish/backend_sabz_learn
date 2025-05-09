@@ -20,7 +20,7 @@ const schema = mongoose.Schema(
     },
     course: {
       type: mongoose.Types.ObjectId,
-      ref: "Course",
+      ref: "course",
     },
   },
   {

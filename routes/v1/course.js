@@ -9,10 +9,13 @@ const isAdminMiddleware = require("../../middlewares/isAdmin.js");
 const router = express.Router();
 
 router
+  .route("/session")
+  .get(authMiddleware, isAdminMiddleware, courseController.getAllSession);
+
+router
   .route("/:id/session")
   .post(authMiddleware, isAdminMiddleware, courseController.createSession);
 
-  
 router
   .route("/")
   .post(
