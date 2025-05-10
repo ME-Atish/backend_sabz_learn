@@ -1,3 +1,4 @@
+const { isValidObjectId } = require("mongoose");
 const courseModel = require("../../models/course");
 const sessionModel = require("../../models/session");
 
@@ -60,5 +61,19 @@ exports.getSessionInfo = async (req, res) => {
 
   const sessions = await sessionModel.find({ course: course._id });
 
-  return res.json({session, sessions});
+  return res.json({ session, sessions });
+};
+
+exports.deleteSession = async (req, res) => {
+
+  if (!isValidObjectId(req.params.id)) {
+    return res.status(406).json({ message: "The id is not valid" });
+  }
+  const deletedCourse = await sessionModel.findOneAndDelete({ _id: req.params.id });
+
+  if (!deletedCourse) {
+    return res.status(404).json({ message: "The session not found" });
+  }
+
+  return res.json({ deletedCourse });
 };
