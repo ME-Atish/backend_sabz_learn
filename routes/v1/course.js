@@ -25,4 +25,6 @@ router
     courseController.create
   );
 
+router.route("/:href/:sessionId").get(courseController.getSessionInfo);
+
 module.exports = router;
