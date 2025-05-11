@@ -12,6 +12,8 @@ router
   .route("/session")
   .get(authMiddleware, isAdminMiddleware, courseController.getAllSession);
 
+router.route("/category/:href").get(courseController.getCategory);
+
 router.route("/:href/:sessionId").get(courseController.getSessionInfo);
 
 router

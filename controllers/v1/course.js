@@ -2,7 +2,8 @@ const { isValidObjectId } = require("mongoose");
 
 const courseModel = require("../../models/course");
 const sessionModel = require("../../models/session");
-const userCourseModel = require("../../models/userCourse")
+const userCourseModel = require("../../models/userCourse");
+const categoryModel = require("../../models/category");
 
 exports.create = async (req, res) => {
   const {
@@ -103,4 +104,18 @@ exports.register = async (req, res) => {
   return res
     .status(201)
     .json({ message: "The user successfully registered on the course" });
+};
+
+exports.getCategory = async (req, res) => {
+  const { href } = req.params;
+
+  const category = await categoryModel.findOne({ href });
+
+  if (category) {
+    const categoryCourse = await courseModel.find({ categoryId: category._id });
+    return res.json(categoryCourse);
+    
+  } else {
+    return res.json([]);
+  }
 };
