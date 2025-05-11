@@ -12,6 +12,8 @@ router
   .route("/session")
   .get(authMiddleware, isAdminMiddleware, courseController.getAllSession);
 
+router.route("/:href/:sessionId").get(courseController.getSessionInfo);
+
 router
   .route("/:id/session")
   .post(authMiddleware, isAdminMiddleware, courseController.createSession);
@@ -25,7 +27,7 @@ router
     courseController.create
   );
 
-router.route("/:href/:sessionId").get(courseController.getSessionInfo);
+router.route("/:id/register").post(authMiddleware, courseController.register);
 
 router
   .route("/session/:id")

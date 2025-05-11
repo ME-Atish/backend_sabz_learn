@@ -1,6 +1,8 @@
 const { isValidObjectId } = require("mongoose");
+
 const courseModel = require("../../models/course");
 const sessionModel = require("../../models/session");
+const userCourseModel = require("../../models/userCourse")
 
 exports.create = async (req, res) => {
   const {
@@ -65,15 +67,40 @@ exports.getSessionInfo = async (req, res) => {
 };
 
 exports.deleteSession = async (req, res) => {
-
   if (!isValidObjectId(req.params.id)) {
     return res.status(406).json({ message: "The id is not valid" });
   }
-  const deletedCourse = await sessionModel.findOneAndDelete({ _id: req.params.id });
+  const deletedCourse = await sessionModel.findOneAndDelete({
+    _id: req.params.id,
+  });
 
   if (!deletedCourse) {
     return res.status(404).json({ message: "The session not found" });
   }
 
   return res.json({ deletedCourse });
+};
+
+exports.register = async (req, res) => {
+  const { price } = req.body;
+
+  const isUserAlreadyRegistered = await userCourseModel.findOne({
+    user: req.user._id,
+  });
+
+  if (isUserAlreadyRegistered) {
+    return res
+      .status(409)
+      .json({ message: "The user already registered on this course" });
+  }
+
+  const register = await userCourseModel.create({
+    course: req.params.id,
+    user: req.user._id,
+    price,
+  });
+
+  return res
+    .status(201)
+    .json({ message: "The user successfully registered on the course" });
 };
