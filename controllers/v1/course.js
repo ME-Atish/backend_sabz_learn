@@ -4,6 +4,7 @@ const courseModel = require("../../models/course");
 const sessionModel = require("../../models/session");
 const userCourseModel = require("../../models/userCourse");
 const categoryModel = require("../../models/category");
+const commentModel = require("../../models/comment");
 
 exports.create = async (req, res) => {
   const {
@@ -114,8 +115,31 @@ exports.getCategory = async (req, res) => {
   if (category) {
     const categoryCourse = await courseModel.find({ categoryId: category._id });
     return res.json(categoryCourse);
-    
   } else {
     return res.json([]);
   }
+};
+
+exports.getOne = async (req, res) => {
+  const course = await courseModel
+    .findOne({ href: req.params.href })
+    .populate("creator", "-password")
+    .populate("categoryId");
+
+  if (!course) {
+    return res
+      .status(404)
+      .json({ message: "We don't have such a course at the moment." });
+  }
+
+  const sessions = await sessionModel.find({ course: course._id });
+  const comments = await commentModel
+    .find({ course: course._id, isAccept: 1 })
+    .populate("creator", "-password");
+
+  const courseStudentCount = await userCourseModel
+    .find({ course: course._id })
+    .countDocuments();
+
+  res.json({ course, sessions, comments, courseStudentCount });
 };

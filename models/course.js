@@ -24,7 +24,7 @@ const schema = mongoose.Schema(
     },
     categoryId: {
       type: mongoose.Types.ObjectId,
-      ref: "category",
+      ref: "Category",
     },
     creator: {
       type: mongoose.Types.ObjectId,

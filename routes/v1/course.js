@@ -14,6 +14,8 @@ router
 
 router.route("/category/:href").get(courseController.getCategory);
 
+router.route("/:href").get(courseController.getOne)
+
 router.route("/:href/:sessionId").get(courseController.getSessionInfo);
 
 router
