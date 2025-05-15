@@ -10,6 +10,19 @@ const schema = mongoose.Schema(
       type: String,
       required: true,
     },
+    price: {
+      type: Number,
+      required: true,
+    },
+    status: {
+      type: String,
+      enum: ["finished", "presell", "ongoing"],
+      default: "finished",
+    },
+    discount: {
+      type: Number,
+      required: true,
+    },
     cover: {
       type: String,
       required: true,
