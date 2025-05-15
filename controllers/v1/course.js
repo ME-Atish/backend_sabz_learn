@@ -141,5 +141,16 @@ exports.getOne = async (req, res) => {
     .find({ course: course._id })
     .countDocuments();
 
-  res.json({ course, sessions, comments, courseStudentCount });
+  const isUserRegisterToThisCourse = !!(await userCourseModel.findOne({
+    user: req.user._id,
+    course: course._id,
+  }));
+
+  res.json({
+    course,
+    sessions,
+    comments,
+    isUserRegisterToThisCourse,
+    courseStudentCount,
+  });
 };
