@@ -177,3 +177,21 @@ exports.deleteCourse = async (req, res) => {
     deletedCourse,
   });
 };
+
+exports.getRelated = async (req, res) => {
+  const { href } = req.params;
+
+  const course = await courseModel.findOne({ href });
+
+  if (!course) {
+    res.status(404).json({ message: "The course not found" });
+  }
+
+  let relatedCourses = await courseModel.find({
+    categoryId: course.categoryId,
+  });
+
+  relatedCourses = relatedCourses.filter((course) => course.href !== href);
+
+  return res.json(relatedCourses);
+};
