@@ -124,3 +124,30 @@ exports.answer = async (req, res) => {
 
   res.status(201).json(answerComment);
 };
+
+exports.getAll = async (req, res) => {
+  const comments = await commentModel
+    .find()
+    .populate("creator", "-password")
+    .populate("course")
+    .lean();
+
+  let allComment = [];
+
+  comments.forEach((comment) => {
+    comments.forEach((answerComment) => {
+      if (String(comment._id) == String(answerComment.mainCommentId)) {
+        allComment.push({
+          ...comment,
+          course: comment.course.name,
+          creator: comment.creator.name,
+          answerComment,
+        });
+      }
+    });
+  });
+
+  res.json({
+    comment: allComment,
+  });
+};
