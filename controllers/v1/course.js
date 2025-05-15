@@ -211,3 +211,18 @@ exports.getRelated = async (req, res) => {
 
   return res.json(relatedCourses);
 };
+
+exports.popular = async (req, res) => {
+  const course = await courseModel
+    .find({score: {$gte: 3}})
+    .populate("creator", "-password")
+    .populate("categoryId");
+
+  res.json(course)
+
+};
+
+exports.presell = async (req, res) => {
+  const course = await courseModel.find({status: "presell"})
+  res.json(course)
+};

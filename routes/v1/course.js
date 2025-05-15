@@ -12,6 +12,10 @@ router
   .route("/session")
   .get(authMiddleware, isAdminMiddleware, courseController.getAllSession);
 
+router.route("/presell").get(courseController.presell);
+
+router.route("/popular").get(courseController.popular);
+
 router.route("/category/:href").get(courseController.getCategory);
 
 router.route("/related/:href").get(courseController.getRelated);

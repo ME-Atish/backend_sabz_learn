@@ -35,6 +35,10 @@ const schema = mongoose.Schema(
       type: String,
       required: true,
     },
+    score: {
+      type: Number,
+      default: 5,
+    },
     categoryId: {
       type: mongoose.Types.ObjectId,
       ref: "Category",
