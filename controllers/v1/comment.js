@@ -1,4 +1,4 @@
-const { default: mongoose } = require("mongoose");
+const { default: mongoose, ModifiedPathsSnapshot } = require("mongoose");
 const commentModel = require("../../models/comment");
 const courseModel = require("../../models/course");
 
@@ -41,4 +41,50 @@ exports.delete = async (req, res) => {
   }
 
   return res.status(200).json(deletedComment);
+};
+
+exports.accept = async (req, res) => {
+  const isValidObjectId = mongoose.Types.ObjectId.isValid(req.params.id);
+
+  if (!isValidObjectId) {
+    return res.status(409).json({ message: "The id is not valid" });
+  }
+
+  const acceptComment = await commentModel.findOneAndUpdate(
+    {
+      _id: req.params.id,
+    },
+    {
+      isAccept: 1,
+    }
+  );
+
+  if (!acceptComment) {
+    return res.status(404).json({ message: "The course not found" });
+  }
+
+  return res.json({ message: "The comment was accepted successfully" });
+};
+
+exports.reject = async (req, res) => {
+  const isValidObjectId = mongoose.Types.ObjectId.isValid(req.params.id);
+
+  if (!isValidObjectId) {
+    return res.status(409).json({ message: "The id is not valid" });
+  }
+
+  const rejectComment = await commentModel.findOneAndUpdate(
+    {
+      _id: req.params.id,
+    },
+    {
+      isAccept: 0,
+    }
+  );
+
+  if (!rejectComment) {
+    res.status(404).json({ message: "The comment not found" });
+  }
+
+  return res.json({ message: "The comment was rejected successfully" });
 };
