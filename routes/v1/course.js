@@ -38,3 +38,7 @@ router
   .delete(authMiddleware, isAdminMiddleware, courseController.deleteSession);
 
 module.exports = router;
+
+router
+  .route("/:id")
+  .delete(authMiddleware, isAdminMiddleware, courseController.deleteCourse);

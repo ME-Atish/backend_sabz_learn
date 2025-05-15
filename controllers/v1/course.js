@@ -1,4 +1,4 @@
-const { isValidObjectId } = require("mongoose");
+const { isValidObjectId, default: mongoose } = require("mongoose");
 
 const courseModel = require("../../models/course");
 const sessionModel = require("../../models/session");
@@ -152,5 +152,28 @@ exports.getOne = async (req, res) => {
     comments,
     isUserRegisterToThisCourse,
     courseStudentCount,
+  });
+};
+
+exports.deleteCourse = async (req, res) => {
+  const isValidObjectId = mongoose.Types.ObjectId.isValid(req.params.id);
+  if (!isValidObjectId) {
+    return res.status(409).json({
+      message: "The id is not valid",
+    });
+  }
+
+  const deletedCourse = await courseModel.findOneAndDelete({
+    _id: req.params.id,
+  });
+
+  if (!deletedCourse) {
+    return res.status(404).json({
+      message: "The course not found",
+    });
+  }
+
+  return res.json({
+    deletedCourse,
   });
 };
