@@ -1,3 +1,4 @@
+const { default: mongoose } = require("mongoose");
 const contactModel = require("../../models/contact");
 
 exports.create = async (req, res) => {
@@ -12,15 +13,35 @@ exports.create = async (req, res) => {
   });
 
   if (!contact) {
-    res.status(500).json({
+    return res.status(500).json({
       message: "An error given when try to create field",
     });
   }
 
-  res.status(201).json(contact);
+  return res.status(201).json(contact);
 };
 
 exports.getAll = async (req, res) => {
   const contacts = await contactModel.find({});
-  res.json(contacts);
+  return res.json(contacts);
+};
+
+exports.delete = async (req, res) => {
+  const isValidObjectId = mongoose.Types.ObjectId.isValid(req.params.id);
+
+  if (!isValidObjectId) {
+    return res.status(409).json({ message: "The id is not valid" });
+  }
+
+  const deletedMessage = await contactModel.findOneAndDelete({
+    _id: req.params.id,
+  });
+
+  if (!deletedMessage) {
+    res.status(404).json({
+      message: "The message not found",
+    });
+  }
+
+  return res.json(deletedMessage);
 };

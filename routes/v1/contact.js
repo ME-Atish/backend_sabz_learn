@@ -11,4 +11,8 @@ router
   .post(contactController.create)
   .get(authMiddleware, isAdminMiddleware, contactController.getAll);
 
+router
+  .route("/:id")
+  .delete(authMiddleware, isAdminMiddleware, contactController.delete);
+
 module.exports = router;
