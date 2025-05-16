@@ -1,4 +1,6 @@
 const { default: mongoose } = require("mongoose");
+const nodemailer = require("nodemailer");
+
 const contactModel = require("../../models/contact");
 
 exports.create = async (req, res) => {
@@ -44,4 +46,35 @@ exports.delete = async (req, res) => {
   }
 
   return res.json(deletedMessage);
+};
+
+exports.answer = async (req, res) => {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "hamzecarno@gmail.com",
+      pass: "fgbbreirhrmitqbf",
+    },
+  });
+
+  const mailOption = {
+    from: "hamzecarno@gmail.com",
+    to: req.body.email,
+    subject: "پاسخ پیغام شما",
+    text: req.body.answer,
+  };
+
+  transporter.sendMail(mailOption, async (err, info) => {
+    if (err) {
+      return res.json(err);
+    } else {
+      const contact = await contactModel.findOneAndUpdate(
+        { email: req.body.email },
+        {
+          isAnswer: 1,
+        }
+      );
+      return res.json({ message: "Email sent successfully" });
+    }
+  });
 };
