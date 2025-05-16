@@ -29,3 +29,6 @@ const schema = mongoose.Schema(
 );
 
 const model = mongoose.model("contact", schema);
+
+
+module.exports = model
