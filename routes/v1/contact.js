@@ -6,6 +6,9 @@ const contactController = require("../../controllers/v1/contact");
 
 const router = express.Router();
 
-router.route("/").post(contactController.create)
+router
+  .route("/")
+  .post(contactController.create)
+  .get(authMiddleware, isAdminMiddleware, contactController.getAll);
 
 module.exports = router;

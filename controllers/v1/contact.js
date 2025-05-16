@@ -19,3 +19,8 @@ exports.create = async (req, res) => {
 
   res.status(201).json(contact);
 };
+
+exports.getAll = async (req, res) => {
+  const contacts = await contactModel.find({});
+  res.json(contacts);
+};
