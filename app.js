@@ -12,6 +12,7 @@ const courseRouter = require("./routes/v1/course");
 const commentRouter = require("./routes/v1/comment");
 const contactRouter = require("./routes/v1/contact");
 const newsLetterRouter = require("./routes/v1/newsLetter");
+const searchRouter = require("./routes/v1/search");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -29,5 +30,6 @@ app.use("/v1/course", courseRouter);
 app.use("/v1/comment", commentRouter);
 app.use("/v1/contact", contactRouter);
 app.use("/v1/newsletter", newsLetterRouter);
+app.use("/v1/search", searchRouter);
 
 module.exports = app;
