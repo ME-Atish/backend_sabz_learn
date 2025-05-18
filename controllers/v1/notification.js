@@ -1,3 +1,4 @@
+const { isValidObjectId } = require("mongoose");
 const notificationModel = require("../../models/notification");
 
 exports.create = async (req, res) => {
@@ -37,4 +38,22 @@ exports.delete = async (req, res) => {
   }
 
   return res.json(deletedNotification);
+};
+
+exports.see = async (req, res) => {
+  const { id } = req.params;
+  if (!isValidObjectId(id)) {
+    return res.status(403).json({
+      message: "The id not valid",
+    });
+  }
+
+  const seenNotification = await notificationModel.findOneAndUpdate(
+    { _id: id },
+    {
+      seen: 1,
+    }
+  );
+
+  return res.json(seenNotification);
 };

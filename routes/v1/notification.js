@@ -18,5 +18,8 @@ router
   .route("/:id")
   .delete(authMiddleware, isAdminMiddleware, notificationController.delete);
 
+router
+  .route("/:id/see")
+  .put(authMiddleware, isAdminMiddleware, notificationController.see);
 
-module.exports = router
+module.exports = router;
