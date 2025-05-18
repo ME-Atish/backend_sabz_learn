@@ -63,7 +63,7 @@ exports.login = async (req, res) => {
   if (!user) {
     return res.status(401).json({ message: "The username or email not found" });
   }
-  const isPasswordValid = await bcrypt.compare(password, user.password);
+  const isPasswordValid = await bcrypt.compare(password.toString(), user.password);
 
   if (!isPasswordValid) {
     return res.status(401).json({ message: "Password is not valid" });
