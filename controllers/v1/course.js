@@ -134,7 +134,7 @@ exports.getOne = async (req, res) => {
 
   const sessions = await sessionModel.find({ course: course._id });
   const comments = await commentModel
-    .find({ course: course._id, isAccept: 1 })
+    .find({ course: course._id, isAccept: 1 } , "-article")
     .populate("creator", "-password")
     .lean();
 

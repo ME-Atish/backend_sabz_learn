@@ -1,19 +1,22 @@
 const { default: mongoose, ModifiedPathsSnapshot } = require("mongoose");
 const commentModel = require("../../models/comment");
 const courseModel = require("../../models/course");
+const articleModel = require("../../models/article");
 
 exports.create = async (req, res) => {
-  const { body, courseHref, score } = req.body;
+  const { body, href, score } = req.body;
 
-  const course = await courseModel.findOne({ href: courseHref });
+  const articleComment = await articleModel.findOne({ href });
+  const courseComment = await courseModel.findOne({ href });
 
-  if (!course) {
-    res.status(404).json({ message: "There is not course!" });
+  if (!articleComment && !courseComment) {
+    res.status(404).json({ message: "There is not  article or course!" });
   }
 
   const comment = await commentModel.create({
     body,
-    course: course._id,
+    course: courseComment,
+    article: articleComment,
     creator: req.user._id,
     score,
     isAnswer: 0,
@@ -116,6 +119,7 @@ exports.answer = async (req, res) => {
   const answerComment = await commentModel.create({
     body,
     course: acceptedComment.course,
+    article: acceptedComment.article,
     creator: req.user._id,
     isAnswer: 1,
     isAccept: 1,
