@@ -45,6 +45,3 @@ router
 
 module.exports = router;
 
-router
-  .route("/:id")
-  .delete(authMiddleware, isAdminMiddleware, courseController.deleteCourse);
