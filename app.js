@@ -16,6 +16,7 @@ const searchRouter = require("./routes/v1/search");
 const notificationRouter = require("./routes/v1/notification");
 const offRouter = require("./routes/v1/off");
 const articleRouter = require("./routes/v1/article");
+const orderRouter = require("./routes/v1/order");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -37,5 +38,6 @@ app.use("/v1/search", searchRouter);
 app.use("/v1/notification", notificationRouter);
 app.use("/v1/off", offRouter);
 app.use("/v1/article", articleRouter);
+app.use("/v1/order", orderRouter);
 
 module.exports = app;
